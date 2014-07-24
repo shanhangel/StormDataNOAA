@@ -1,0 +1,72 @@
+# The Most Harmful Weather Event
+---
+title: "Untitled"
+author: "Shan Huang"
+date: "Thursday, July 24, 2014"
+output: html_document
+---
+## 1. Synopsis
+In US, storm and other weather events cause a large loss for both population 
+health and economy every year.In order to reduce the loss and damage from these
+disaster, it is important to find out which of them are the most harmful events.
+History time and geographic information for each weather event occurrence data 
+were collected by U.S. National Oceanic and Atmospheric Administration's (NOAA) 
+storm database. In this paper, the database was downloaded and analysed to answer
+two question:
+1. Across the United States, which types of events (as indicated in the EVTYPE 
+variable) are most harmful with respect to population health?
+2. Across the United States, which types of events have the greatest economic 
+consequences?
+
+## 2. Getting the data
+
+```{r download.data, cache=TRUE}
+Sys.setlocale('LC_ALL', 'English')
+setwd("./Storm")
+download.file("http://d396qusza40orc.cloudfront.net/repdata/data/StormData.csv.bz2", 
+              "repdata-data-StormData.csv.bz2")
+stormData <- read.csv("repdata-data-StormData.csv.bz2", sep=",", header=TRUE, 
+                      stringsAsFactors=FALSE)
+```
+
+Take a look at the dataset, there are 4 columns are corresponding to health and economy
+loss:
+1. FATALTIES ~ The number of fatalities caused by the events
+2. INJURIES ~ The number of people injured by the events
+3. PROPDMG ~ The amount of property loss by the events
+4. CROPDMG ~ The amount of crop damage by the weather
+
+```{r}
+str(stormData)
+```
+
+
+## 3. Data Processing
+### 3.1 The most harmful events for public health
+```{r}
+fatalities <- aggregate(stormData$FATALITIES, list(stormData$EVTYPE), sum)
+injuries <- aggregate(stormData$INJURIES, list(stormData$EVTYPE), sum)
+health <- merge(fatalities, injuries, by="Group.1")
+health[,4] <- health[,2] + health[,3]
+colnames(health) <- c("type", "fatalities", "injuries", "total")
+```
+
+```{r}
+healthtop <- health[order(health$total, decreasing=TRUE),][1:10,]
+
+library(reshape2)
+healthtop_1 <- melt(healthtop, id.vars="type")
+
+library(ggplot2)
+ggplot(healthtop_1, aes(x = reorder(type, -value), y = value)) + 
+    geom_bar(stat = "identity", aes(fill = variable), position = "dodge") + 
+    scale_y_sqrt("Number of Cases") + xlab("Event Type") +
+    theme(axis.text.x = element_text(angle = 45, hjust=1)) + 
+    ggtitle("Top 10 Health Threat Events")
+```
+
+### 3.2 The most harmful events for economy
+
+### 3.3 Which part of US suffer most from the weather disaster
+
+## 4. Result 
