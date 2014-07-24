@@ -45,7 +45,7 @@ For this assignment you will need some specific tools
 
 * knitr: You will need the knitr package in order to compile your R Markdown document and convert it to HTML
 
-Document Layout
+## Document Layout
 
 * Language: Your document should be written in English.
 
