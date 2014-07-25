@@ -143,27 +143,17 @@ colnames(healthState)[4] <- "TOTAL"
 
 ```{r}
 healthState_1 <- aggregate(healthState$TOTAL, list(healthState$STATE), sum)
+colnames(healthState_1) <- c("STATE", "VALUE")
 ```
 
-We utilize choropleths plot[1] to show which part/state is more vulnerable by weather disaster. The [US states and territories map](http://www.nws.noaa.gov/geodata/catalog/national/data/s_01ap14.zip) is downloaded from [nationl weather
-service web](http://www.nws.noaa.gov/geodata/catalog/national/html/us_state.htm)
-and unzipped in the 
-```{r, cache=TRUE}
-download.file("http://biogeo.ucdavis.edu/data/gadm2/shp/USA_adm.zip",
-              "USA_adm.zip")
-```
-
-```{r}
-library(maptools)
-library(ggmap)
-
-USMap <- readShapePoly(fn="./USA_adm/USA_adm1.shp")
-plot(USMap)
+```{r, fig.width=12}
+ggplot(healthState_1, aes(x=reorder(STATE, -VALUE), y=VALUE)) + 
+    geom_bar(stat = "identity",  position = "dodge") + 
+    ylab("Number of Health Cases") + xlab("State") +
+    theme(axis.text.x = element_text(angle = 45, hjust=1)) + 
+    ggtitle("Number of Health Cases in State")
 ```
 
 ## 4. Result 
-According to the 
+According to the data demonstrated in first figure, 
 
-## *Reference*
-[1] http://prabhasp.com/wp/how-to-make-choropleths-in-r/
-[2] http://www.r-bloggers.com/maps-in-r-choropleth-maps/

@@ -1,4 +1,4 @@
-# The Most Harmful Weather Event in US
+# The Most Harmful Weather Events in US
 
 ## 1. Synopsis
 In US, storm and other weather events cause a large loss for both population 
@@ -8,7 +8,7 @@ History information including time and geography data for each weather event occ
 Administration's (NOAA) storm database. In this paper, the database was 
 downloaded and analysed to answer two question:
 
-1. Across the United States, which types of events (as indicated in the EVTYPE 
+1. Across the United States, which types of events (as indicated in the `EVTYPE` 
 variable) are most harmful with respect to population health?
 2. Across the United States, which types of events have the greatest economic 
 consequences?
@@ -196,9 +196,9 @@ plot2 <- ggplot(propertydmgstop, aes(x=reorder(type, -propertydmgs),
 
 plot3 <- ggplot(corpdmgstop, aes(x=reorder(type, -corpdmgs), y=corpdmgs)) + 
     geom_bar(stat = "identity",  position = "dodge") + 
-    scale_y_sqrt("Crop Damage(US Dollar)") + xlab("Event Type") +
+    scale_y_sqrt("Corp Damage(US Dollar)") + xlab("Event Type") +
     theme(axis.text.x = element_text(angle = 45, hjust=1)) + 
-    ggtitle("Top 10 Crop Threat Events")
+    ggtitle("Top 10 Corp Threat Events")
 
 grid.arrange(plot2, plot3, ncol = 2)
 ```
@@ -216,5 +216,22 @@ colnames(healthState)[4] <- "TOTAL"
 ```
 
 
+```r
+healthState_1 <- aggregate(healthState$TOTAL, list(healthState$STATE), sum)
+colnames(healthState_1) <- c("STATE", "VALUE")
+```
+
+
+```r
+ggplot(healthState_1, aes(x=reorder(STATE, -VALUE), y=VALUE)) + 
+    geom_bar(stat = "identity",  position = "dodge") + 
+    ylab("Number of Health Cases") + xlab("State") +
+    theme(axis.text.x = element_text(angle = 45, hjust=1)) + 
+    ggtitle("Number of Health Cases in State")
+```
+
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
+
 ## 4. Result 
-According to the 
+According to the data demonstrated in first figure, 
+
