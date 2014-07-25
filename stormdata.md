@@ -183,6 +183,7 @@ propertydmgstop <- propertydmgs[order(propertydmgs$propertydmgs,
 corpdmgstop <- corpdmgs[order(corpdmgs$corpdmgs, decreasing=TRUE),][1:10,]
 ```
 
+Plot the data
 
 ```r
 library(gridExtra)
@@ -221,6 +222,7 @@ healthState_1 <- aggregate(healthState$TOTAL, list(healthState$STATE), sum)
 colnames(healthState_1) <- c("STATE", "VALUE")
 ```
 
+Plot the data
 
 ```r
 ggplot(healthState_1, aes(x=reorder(STATE, -VALUE), y=VALUE)) + 
@@ -233,5 +235,9 @@ ggplot(healthState_1, aes(x=reorder(STATE, -VALUE), y=VALUE)) +
 ![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
 
 ## 4. Result 
-According to the data demonstrated in first figure, 
+According to the data demonstrated in first figure, among these types of weather disaster, **TORNADO**, **EXCESSIVE HEAT** and **TSTM WIND** are most dangerous for public health. 
+As it showed in the second figure,  **TORNADO**, **HURRICANE/TYPHOON** and **TORNADO** cause most property loss, while **DROUGHT**, **FLOOD** and **ICESTORM** bring most corp damage.
+In the aspect of geographic classification, Texas is the most vulnerable targets
+for bad weather events. But no obvious pattern can be discovered to show which 
+part of US suffered more from the meteorological disaster.
 
