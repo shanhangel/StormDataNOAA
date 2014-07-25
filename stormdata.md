@@ -14,7 +14,8 @@ variable) are most harmful with respect to population health?
 consequences?
 
 ## 2. Getting the data
-Dataset is downloaded from coursera web page
+[NOAA storm database](http://d396qusza40orc.cloudfront.net/repdata/data/StormData.csv.bz2) is downloaded from coursera web page. Cache is used to avoid repetition 
+of downloading. 
 
 
 ```r
@@ -34,10 +35,10 @@ stormData <- read.csv("repdata-data-StormData.csv.bz2", sep=",", header=TRUE,
 
 Take a look at the dataset, there are 4 columns are corresponding to health and economy loss:
 
-1. FATALTIES ~ The number of fatalities caused by the events
-2. INJURIES ~ The number of people injured by the events
-3. PROPDMG ~ The amount of property loss by the events
-4. CROPDMG ~ The amount of crop damage by the weather
+1. `FATALTIES` ~ The number of fatalities caused by the events
+2. `INJURIES` ~ The number of people injured by the events
+3. `PROPDMG` ~ The amount of property loss by the events
+4. `CROPDMG` ~ The amount of crop damage by the weather
 
 
 ```r
@@ -115,11 +116,65 @@ ggplot(healthtop_1, aes(x = reorder(type, -value), y = value)) +
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
 ### 3.2 The most harmful events for economy
-By examing the data, we find that there are huge difference between the range of  property damage and corp damage. So it is more 
+By examing the data, we find that the units for each row of property damage and 
+corp damage are different, and there are huge gap between the range of property damage and corp damage. So it is more clear to demostrate them seperately. First, 
+we need to make their units same. 
+
 
 ```r
-propertydmgs <- aggregate(stormData$PROPDMG, list(stormData$EVTYPE), sum)
-corpdmgs <- aggregate(stormData$CROPDMG, list(stormData$EVTYPE), sum)
+unique(stormData$CROPDMGEXP)
+```
+
+```
+## [1] ""  "M" "K" "m" "B" "?" "0" "k" "2"
+```
+
+```r
+unique(stormData$PROPDMGEXP)
+```
+
+```
+##  [1] "K" "M" ""  "B" "m" "+" "0" "5" "6" "?" "4" "2" "3" "h" "7" "H" "-"
+## [18] "1" "8"
+```
+
+According to the [National Weather Service Storm Data Documentation](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf):
+
+- K/k stand for thousand
+- M/m stand for million
+- B/b stand for Billion
+
+So, we creat a new data frame `economy` to use the same units.
+
+```r
+economy <- stormData[,c("EVTYPE", "PROPDMG", "PROPDMGEXP", "CROPDMG", 
+                        "CROPDMGEXP")]
+index1 <- which(economy$PROPDMGEXP%in%c("K","k"))
+index2 <- which(economy$PROPDMGEXP%in%c("M","m"))
+index3 <- which(economy$PROPDMGEXP%in%c("B","b"))
+
+economy[,2][index1] <- economy[,2][index1]*1000
+economy[,2][index2] <- economy[,2][index2]*1000000
+economy[,2][index3] <- economy[,2][index3]*1000000000
+```
+
+Use the same method for crop damage
+
+```r
+index4 <- which(economy$CROPDMGEXP%in%c("K","k"))
+index5 <- which(economy$CROPDMGEXP%in%c("M","m"))
+index6 <- which(economy$CROPDMGEXP%in%c("B","b"))
+
+economy[,4][index4] <- economy[,4][index4]*1000
+economy[,4][index5] <- economy[,4][index5]*1000000
+economy[,4][index6] <- economy[,4][index6]*1000000000
+```
+
+
+
+```r
+propertydmgs <- aggregate(economy$PROPDMG, list(economy$EVTYPE), sum)
+corpdmgs <- aggregate(economy$CROPDMG, list(economy$EVTYPE), sum)
 colnames(propertydmgs) <- c("type", "propertydmgs")
 colnames(corpdmgs) <- c("type", "corpdmgs")
 
@@ -131,17 +186,7 @@ corpdmgstop <- corpdmgs[order(corpdmgs$corpdmgs, decreasing=TRUE),][1:10,]
 
 ```r
 library(gridExtra)
-```
 
-```
-## Warning: package 'gridExtra' was built under R version 3.1.1
-```
-
-```
-## Loading required package: grid
-```
-
-```r
 plot2 <- ggplot(propertydmgstop, aes(x=reorder(type, -propertydmgs), 
                                      y=propertydmgs)) + 
     geom_bar(stat = "identity",  position = "dodge") + 
@@ -158,7 +203,7 @@ plot3 <- ggplot(corpdmgstop, aes(x=reorder(type, -corpdmgs), y=corpdmgs)) +
 grid.arrange(plot2, plot3, ncol = 2)
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
 
 ### 3.3 Which part of US suffer most from the weather disaster?
 
