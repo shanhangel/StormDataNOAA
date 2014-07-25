@@ -192,7 +192,7 @@ hr {
 <body>
 <h1>The Most Harmful Weather Event in US</h1>
 
-<hr/>
+<h1></h1>
 
 <h2>1. Synopsis</h2>
 
@@ -330,9 +330,9 @@ we need to make their units same. </p>
 <p>According to the <a href="https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf">National Weather Service Storm Data Documentation</a>:</p>
 
 <ul>
-<li>K/k stand for thousand</li>
-<li>M/m stand for million</li>
-<li>B/b stand for Billion</li>
+<li>&ldquo;K&rdquo;/&ldquo;k&rdquo; stand for thousand</li>
+<li>&ldquo;M&rdquo;/&ldquo;m&rdquo; stand for million</li>
+<li>&ldquo;B&rdquo;/&ldquo;b&rdquo; stand for billion</li>
 </ul>
 
 <p>So, we creat a new data frame <code>economy</code> to use the same units.</p>
@@ -343,9 +343,9 @@ index1 &lt;- which(economy$PROPDMGEXP%in%c(&quot;K&quot;,&quot;k&quot;))
 index2 &lt;- which(economy$PROPDMGEXP%in%c(&quot;M&quot;,&quot;m&quot;))
 index3 &lt;- which(economy$PROPDMGEXP%in%c(&quot;B&quot;,&quot;b&quot;))
 
-economy[,2][index1] &lt;- economy[,2][index1]*1000
-economy[,2][index2] &lt;- economy[,2][index2]*1000000
-economy[,2][index3] &lt;- economy[,2][index3]*1000000000
+economy[,2][index1] &lt;- economy[,2][index1]*(10^3)
+economy[,2][index2] &lt;- economy[,2][index2]*(10^6)
+economy[,2][index3] &lt;- economy[,2][index3]*(10^9)
 </code></pre>
 
 <p>Use the same method for crop damage</p>
@@ -354,9 +354,9 @@ economy[,2][index3] &lt;- economy[,2][index3]*1000000000
 index5 &lt;- which(economy$CROPDMGEXP%in%c(&quot;M&quot;,&quot;m&quot;))
 index6 &lt;- which(economy$CROPDMGEXP%in%c(&quot;B&quot;,&quot;b&quot;))
 
-economy[,4][index4] &lt;- economy[,4][index4]*1000
-economy[,4][index5] &lt;- economy[,4][index5]*1000000
-economy[,4][index6] &lt;- economy[,4][index6]*1000000000
+economy[,4][index4] &lt;- economy[,4][index4]*(10^3)
+economy[,4][index5] &lt;- economy[,4][index5]*(10^6)
+economy[,4][index6] &lt;- economy[,4][index6]*(10^9)
 </code></pre>
 
 <pre><code class="r">propertydmgs &lt;- aggregate(economy$PROPDMG, list(economy$EVTYPE), sum)

@@ -1,5 +1,5 @@
 # The Most Harmful Weather Event in US
----
+================================================================================
 ## 1. Synopsis
 In US, storm and other weather events cause a large loss for both population 
 health and economy every year.In order to reduce the loss and damage from these
@@ -140,9 +140,9 @@ unique(stormData$PROPDMGEXP)
 
 According to the [National Weather Service Storm Data Documentation](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf):
 
-- K/k stand for thousand
-- M/m stand for million
-- B/b stand for Billion
+- "K"/"k" stand for thousand
+- "M"/"m" stand for million
+- "B"/"b" stand for billion
 
 So, we creat a new data frame `economy` to use the same units.
 
@@ -153,9 +153,9 @@ index1 <- which(economy$PROPDMGEXP%in%c("K","k"))
 index2 <- which(economy$PROPDMGEXP%in%c("M","m"))
 index3 <- which(economy$PROPDMGEXP%in%c("B","b"))
 
-economy[,2][index1] <- economy[,2][index1]*1000
-economy[,2][index2] <- economy[,2][index2]*1000000
-economy[,2][index3] <- economy[,2][index3]*1000000000
+economy[,2][index1] <- economy[,2][index1]*(10^3)
+economy[,2][index2] <- economy[,2][index2]*(10^6)
+economy[,2][index3] <- economy[,2][index3]*(10^9)
 ```
 
 Use the same method for crop damage
@@ -165,9 +165,9 @@ index4 <- which(economy$CROPDMGEXP%in%c("K","k"))
 index5 <- which(economy$CROPDMGEXP%in%c("M","m"))
 index6 <- which(economy$CROPDMGEXP%in%c("B","b"))
 
-economy[,4][index4] <- economy[,4][index4]*1000
-economy[,4][index5] <- economy[,4][index5]*1000000
-economy[,4][index6] <- economy[,4][index6]*1000000000
+economy[,4][index4] <- economy[,4][index4]*(10^3)
+economy[,4][index5] <- economy[,4][index5]*(10^6)
+economy[,4][index6] <- economy[,4][index6]*(10^9)
 ```
 
 
