@@ -2,7 +2,6 @@
 ---
 author: "Shan Huang"
 date: "Thursday, July 24, 2014"
-output: html_document
 ---
 ## 1. Synopsis
 In US, storm and other weather events cause a large loss for both population 
@@ -16,18 +15,17 @@ variable) are most harmful with respect to population health?
 consequences?
 
 ## 2. Getting the data
+Dataset is downloaded from coursera 
 
 ```{r download.data, cache=TRUE}
 Sys.setlocale('LC_ALL', 'English')
-setwd("./StormDataNOAA")
 download.file("http://d396qusza40orc.cloudfront.net/repdata/data/StormData.csv.bz2", 
               "repdata-data-StormData.csv.bz2")
 stormData <- read.csv("repdata-data-StormData.csv.bz2", sep=",", header=TRUE, 
                       stringsAsFactors=FALSE)
 ```
 
-Take a look at the dataset, there are 4 columns are corresponding to health and economy
-loss:
+Take a look at the dataset, there are 4 columns are corresponding to health and economy loss:
 1. FATALTIES ~ The number of fatalities caused by the events
 2. INJURIES ~ The number of people injured by the events
 3. PROPDMG ~ The amount of property loss by the events
