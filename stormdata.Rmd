@@ -8,7 +8,7 @@ History information including time and geography data for each weather event occ
 Administration's (NOAA) storm database. In this paper, the database was 
 downloaded and analysed to answer two question:
 
-1. Across the United States, which types of events (as indicated in the EVTYPE 
+1. Across the United States, which types of events (as indicated in the `EVTYPE` 
 variable) are most harmful with respect to population health?
 2. Across the United States, which types of events have the greatest economic 
 consequences?
@@ -141,6 +141,26 @@ healthState[,4] <- healthState[,2] + healthState[,3]
 colnames(healthState)[4] <- "TOTAL"
 ```
 
+```{r}
+healthState_1 <- aggregate(healthState$TOTAL, list(healthState$STATE), sum)
+```
+
+We utilize choropleths plot[1] to show which part/state is more vulnerable by weather disaster. The [US states and territories map](http://www.nws.noaa.gov/geodata/catalog/national/data/s_01ap14.zip) is downloaded from [nationl weather
+service web](http://www.nws.noaa.gov/geodata/catalog/national/html/us_state.htm)
+```{r, cache=TRUE}
+download.file("http://www.nws.noaa.gov/geodata/catalog/national/data/s_01ap14.zip")
+```
+
+```{r}
+library(rgeos)
+library(maptools)
+
+
+np_dist <- readShapeSpatial("~/Downloads/NPL_adm/NPL_adm3.shp")
+```
 
 ## 4. Result 
 According to the 
+
+## *Reference*
+[1] http://prabhasp.com/wp/how-to-make-choropleths-in-r/
