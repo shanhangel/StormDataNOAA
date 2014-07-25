@@ -1,4 +1,4 @@
-# The Most Harmful Weather Event in US
+# The Most Harmful Weather Events in US
 
 ## 1. Synopsis
 In US, storm and other weather events cause a large loss for both population 
@@ -125,9 +125,9 @@ plot2 <- ggplot(propertydmgstop, aes(x=reorder(type, -propertydmgs),
 
 plot3 <- ggplot(corpdmgstop, aes(x=reorder(type, -corpdmgs), y=corpdmgs)) + 
     geom_bar(stat = "identity",  position = "dodge") + 
-    scale_y_sqrt("Crop Damage(US Dollar)") + xlab("Event Type") +
+    scale_y_sqrt("Corp Damage(US Dollar)") + xlab("Event Type") +
     theme(axis.text.x = element_text(angle = 45, hjust=1)) + 
-    ggtitle("Top 10 Crop Threat Events")
+    ggtitle("Top 10 Corp Threat Events")
 
 grid.arrange(plot2, plot3, ncol = 2)
 ```
@@ -147,16 +147,18 @@ healthState_1 <- aggregate(healthState$TOTAL, list(healthState$STATE), sum)
 
 We utilize choropleths plot[1] to show which part/state is more vulnerable by weather disaster. The [US states and territories map](http://www.nws.noaa.gov/geodata/catalog/national/data/s_01ap14.zip) is downloaded from [nationl weather
 service web](http://www.nws.noaa.gov/geodata/catalog/national/html/us_state.htm)
+and unzipped in the 
 ```{r, cache=TRUE}
-download.file("http://www.nws.noaa.gov/geodata/catalog/national/data/s_01ap14.zip")
+download.file("http://biogeo.ucdavis.edu/data/gadm2/shp/USA_adm.zip",
+              "USA_adm.zip")
 ```
 
 ```{r}
-library(rgeos)
 library(maptools)
+library(ggmap)
 
-
-np_dist <- readShapeSpatial("~/Downloads/NPL_adm/NPL_adm3.shp")
+USMap <- readShapePoly(fn="./USA_adm/USA_adm1.shp")
+plot(USMap)
 ```
 
 ## 4. Result 
@@ -164,3 +166,4 @@ According to the
 
 ## *Reference*
 [1] http://prabhasp.com/wp/how-to-make-choropleths-in-r/
+[2] http://www.r-bloggers.com/maps-in-r-choropleth-maps/
