@@ -1,21 +1,20 @@
 # The Most Harmful Weather Event in US
 ---
-author: "Shan Huang"
-date: "Thursday, July 24, 2014"
-output: html_document
----
 ## 1. Synopsis
 In US, storm and other weather events cause a large loss for both population 
 health and economy every year.In order to reduce the loss and damage from these
 disaster, it is important to find out which of them are the most harmful.
 History information including time and geography data for each weather event occurrence data were collected by U.S. National Oceanic and Atmospheric 
-Administration's (NOAA) storm database. In this paper, the database was downloaded and analysed to answer two question:
+Administration's (NOAA) storm database. In this paper, the database was 
+downloaded and analysed to answer two question:
+
 1. Across the United States, which types of events (as indicated in the EVTYPE 
 variable) are most harmful with respect to population health?
 2. Across the United States, which types of events have the greatest economic 
 consequences?
 
 ## 2. Getting the data
+Dataset is downloaded from coursera web page
 
 
 ```r
@@ -27,22 +26,14 @@ Sys.setlocale('LC_ALL', 'English')
 ```
 
 ```r
-setwd("./StormDataNOAA")
-```
-
-```
-## Error: cannot change working directory
-```
-
-```r
 download.file("http://d396qusza40orc.cloudfront.net/repdata/data/StormData.csv.bz2", 
               "repdata-data-StormData.csv.bz2")
 stormData <- read.csv("repdata-data-StormData.csv.bz2", sep=",", header=TRUE, 
                       stringsAsFactors=FALSE)
 ```
 
-Take a look at the dataset, there are 4 columns are corresponding to health and economy
-loss:
+Take a look at the dataset, there are 4 columns are corresponding to health and economy loss:
+
 1. FATALTIES ~ The number of fatalities caused by the events
 2. INJURIES ~ The number of people injured by the events
 3. PROPDMG ~ The amount of property loss by the events
@@ -94,9 +85,9 @@ str(stormData)
 ##  $ REFNUM    : num  1 2 3 4 5 6 7 8 9 10 ...
 ```
 
-
 ## 3. Data Processing
 ### 3.1 The most harmful events for public health
+Top ten health threaten events ranked by total fataliteis and injuries.
 
 ```r
 fatalities <- aggregate(stormData$FATALITIES, list(stormData$EVTYPE), sum)
@@ -104,12 +95,12 @@ injuries <- aggregate(stormData$INJURIES, list(stormData$EVTYPE), sum)
 health <- merge(fatalities, injuries, by="Group.1")
 health[,4] <- health[,2] + health[,3]
 colnames(health) <- c("type", "fatalities", "injuries", "total")
+healthtop <- health[order(health$total, decreasing=TRUE),][1:10,]
 ```
 
+Plot the data
 
 ```r
-healthtop <- health[order(health$total, decreasing=TRUE),][1:10,]
-
 library(reshape2)
 healthtop_1 <- melt(healthtop, id.vars="type")
 
@@ -124,7 +115,52 @@ ggplot(healthtop_1, aes(x = reorder(type, -value), y = value)) +
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
 ### 3.2 The most harmful events for economy
+By examing the data, we find that there are huge difference between the range of  property damage and corp damage. So it is more 
 
-### 3.3 Which part of US suffer most from the weather disaster
+```r
+propertydmgs <- aggregate(stormData$PROPDMG, list(stormData$EVTYPE), sum)
+corpdmgs <- aggregate(stormData$CROPDMG, list(stormData$EVTYPE), sum)
+colnames(propertydmgs) <- c("type", "propertydmgs")
+colnames(corpdmgs) <- c("type", "corpdmgs")
+
+propertydmgstop <- propertydmgs[order(propertydmgs$propertydmgs, 
+                                      decreasing=TRUE),][1:10,]
+corpdmgstop <- corpdmgs[order(corpdmgs$corpdmgs, decreasing=TRUE),][1:10,]
+```
+
+
+```r
+library(gridExtra)
+```
+
+```
+## Warning: package 'gridExtra' was built under R version 3.1.1
+```
+
+```
+## Loading required package: grid
+```
+
+```r
+plot2 <- ggplot(propertydmgstop, aes(x=reorder(type, -propertydmgs), 
+                                     y=propertydmgs)) + 
+    geom_bar(stat = "identity",  position = "dodge") + 
+    scale_y_sqrt("Property Damage(US Dollar)") + xlab("Event Type") +
+    theme(axis.text.x = element_text(angle = 45, hjust=1)) + 
+    ggtitle("Top 10 Property Threat Events")
+
+plot3 <- ggplot(corpdmgstop, aes(x=reorder(type, -corpdmgs), y=corpdmgs)) + 
+    geom_bar(stat = "identity",  position = "dodge") + 
+    scale_y_sqrt("Crop Damage(US Dollar)") + xlab("Event Type") +
+    theme(axis.text.x = element_text(angle = 45, hjust=1)) + 
+    ggtitle("Top 10 Crop Threat Events")
+
+grid.arrange(plot2, plot3, ncol = 2)
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
+
+### 3.3 Which part of US suffer most from the weather disaster?
 
 ## 4. Result 
+According to the 
