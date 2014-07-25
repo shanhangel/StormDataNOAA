@@ -1,3 +1,6 @@
+---
+output: pdf_document
+---
 # The Most Harmful Weather Events in US
 
 ## 1. Synopsis
