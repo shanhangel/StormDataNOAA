@@ -1,5 +1,5 @@
 # The Most Harmful Weather Event in US
-================================================================================
+
 ## 1. Synopsis
 In US, storm and other weather events cause a large loss for both population 
 health and economy every year.In order to reduce the loss and damage from these
@@ -140,9 +140,9 @@ unique(stormData$PROPDMGEXP)
 
 According to the [National Weather Service Storm Data Documentation](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf):
 
-- "K"/"k" stand for thousand
-- "M"/"m" stand for million
-- "B"/"b" stand for billion
+- "K"/ "k" stand for thousand
+- "M"/ "m" stand for million
+- "B"/ "b" stand for billion
 
 So, we creat a new data frame `economy` to use the same units.
 
@@ -206,6 +206,15 @@ grid.arrange(plot2, plot3, ncol = 2)
 ![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
 
 ### 3.3 Which part of US suffer most from the weather disaster?
+Creat a dataframe `healthState` demostrating number of health threaten cases by 
+state.
+
+```r
+healthState <- stormData[,c("STATE", "FATALITIES", "INJURIES")]
+healthState[,4] <- healthState[,2] + healthState[,3]
+colnames(healthState)[4] <- "TOTAL"
+```
+
 
 ## 4. Result 
 According to the 
