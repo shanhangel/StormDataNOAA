@@ -1,5 +1,5 @@
 ---
-output: pdf_document
+output: word_document
 ---
 # The Most Harmful Weather Events in US
 
